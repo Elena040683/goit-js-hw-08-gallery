@@ -94,8 +94,8 @@ const createImageElement = ({ preview, original, description }) => {
 </li>`;
 };
 
-const allGallery = galleryItems.map(createImageElement).join('');
-galleryRef.insertAdjacentHTML('beforeend', allGallery);
+const allGallery = galleryItems.map(createImageElement);
+galleryRef.insertAdjacentHTML('beforeend', allGallery.join(''));
 
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
 // Открытие модального окна по клику на элементе галереи.
@@ -164,52 +164,53 @@ function onEscModalClose(evt) {
 
 // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
 
-// let activeIndex = null;
+let activeIndex = null;
 
-// galleryRef.addEventListener('click', evt => {
-//   evt.preventDefault();
-//   if (evt.target.nodeName !== 'IMG') {
-//     return;
-//   }
-//   // Получаем индекс картинки в которую кликнули во время открытия модалки
+galleryRef.addEventListener('click', evt => {
+  evt.preventDefault();
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+  //   // Получаем индекс картинки в которую кликнули во время открытия модалки
 
-//   allGallery.forEach((element, index) => {
-//     if (element.includes(evt.target.src)) {
-//       activeIndex = index;
-//       return;
-//     }
-//   });
+  allGallery.forEach((element, index) => {
+    if (element.includes(evt.target.src)) {
+      activeIndex = index;
+      return;
+    }
+  });
 
-//   lightboxRef.classList.add('is-open');
-//   imgRef.src = evt.target.dataset.source;
-//   imgRef.alt = evt.target.alt;
+  lightboxRef.classList.add('is-open');
+  imgRef.src = evt.target.dataset.source;
+  imgRef.alt = evt.target.alt;
 
-//   // Вешаем слушатель на window во время открытия модалки и снимаем во время закрытия
-//   window.addEventListener('keyup', keyboardManipulation);
-// });
+  //   // Вешаем слушатель на window во время открытия модалки и снимаем во время закрытия
 
-// function keyboardManipulation({ key }) {
-//   switch (key) {
-//     case galleryItems.length - 1 > activeIndex && 'ArrowRight':
-//       activeIndex += 1;
-//       imgRef.src = galleryItems[activeIndex].original;
-//       break;
-//     case activeIndex > 0 && 'ArrowLeft':
-//       activeIndex -= 1;
-//       imgRef.src = galleryItems[activeIndex].original;
-//       break;
-//     case activeIndex === galleryItems.length - 1 && 'ArrowRight':
-//       activeIndex = 0;
-//       imgRef.src = galleryItems[activeIndex].original;
-//       break;
-//     case activeIndex === 0 && 'ArrowLeft':
-//       activeIndex = galleryItems.length - 1;
-//       imgRef.src = galleryItems[activeIndex].original;
-//       break;
-//     case 'Escape':
-//       oncloseModal();
-//       break;
-//     default:
-//       alert('что-то пошло не так');
-//   }
-// }
+  window.addEventListener('keyup', keyboardManipulation);
+});
+
+function keyboardManipulation({ key }) {
+  switch (key) {
+    case galleryItems.length - 1 > activeIndex && 'ArrowRight':
+      activeIndex += 1;
+      imgRef.src = galleryItems[activeIndex].original;
+      break;
+    case activeIndex > 0 && 'ArrowLeft':
+      activeIndex -= 1;
+      imgRef.src = galleryItems[activeIndex].original;
+      break;
+    case activeIndex === galleryItems.length - 1 && 'ArrowRight':
+      activeIndex = 0;
+      imgRef.src = galleryItems[activeIndex].original;
+      break;
+    case activeIndex === 0 && 'ArrowLeft':
+      activeIndex = galleryItems.length - 1;
+      imgRef.src = galleryItems[activeIndex].original;
+      break;
+    case 'Escape':
+      oncloseModal();
+      break;
+    default:
+      alert('что-то пошло не так');
+  }
+}
